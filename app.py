@@ -1,20 +1,27 @@
 import os
+from pathlib import Path
+
 import streamlit as st
 from dotenv import load_dotenv
-from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings
-from llama_index.llms.google_genai import GoogleGenAI
+from llama_index.core import Settings, SimpleDirectoryReader, VectorStoreIndex
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llama_index.llms.google_genai import GoogleGenAI
+
+DATA_DIR = Path(__file__).parent / "data"
 
 load_dotenv()
 
 st.title("Babson Handbook Chatbot")
 
+
 @st.cache_resource
 def load_index():
+    """Load the handbook from DATA_DIR and build a searchable vector index."""
     Settings.llm = GoogleGenAI(model="gemini-3.8-flash", api_key=os.getenv("GEMINI_API_KEY"))
     Settings.embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
-    docs = SimpleDirectoryReader("data").load_data()
+    docs = SimpleDirectoryReader(DATA_DIR).load_data()
     return VectorStoreIndex.from_documents(docs)
+
 
 index = load_index()
 

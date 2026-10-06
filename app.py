@@ -32,14 +32,14 @@ def check_data_dir():
     """Stop the app if DATA_DIR is missing, not a folder, or has no visible files."""
     if not DATA_DIR.is_dir():
         st.error(
-            f"Data folder not found: `{DATA_DIR}`. Create a folder named `data` "
+            f"Data folder not found: `{DATA_DIR}`. Create a folder named `data_old` "
             "next to app.py and put the handbook PDF in it."
         )
         st.stop()
 
     files = [f for f in DATA_DIR.iterdir() if f.is_file() and not f.name.startswith(".")]
     if not files:
-        st.error(f"The data folder `{DATA_DIR}` is empty. Add the handbook PDF, then restart the app.")
+        st.error(f"The data_old folder `{DATA_DIR}` is empty. Add the handbook PDF, then restart the app.")
         st.stop()
 
 
